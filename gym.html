@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trainer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-green: #425A4A; --bg-gray: #f8f9fa; }
+        body { background-color: var(--bg-gray); font-family: 'Segoe UI', sans-serif; padding-bottom: 50px; }
+        .navbar { background-color: #212529; color: white; margin-bottom: 20px; }
+        .nav-pills .nav-link { color: #555; font-weight: 600; }
+        .nav-pills .nav-link.active { background-color: var(--primary-green); }
+        .card { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .exercise-row { border-bottom: 1px solid #eee; padding: 12px 0; }
+        .exercise-row:last-child { border-bottom: none; }
+        .btn-save { background-color: var(--primary-green); color: white; border-radius: 10px; font-weight: 600; padding: 12px; transition: 0.3s; }
+        .btn-save:hover { background-color: #34473a; color: white; transform: translateY(-2px); }
+        .form-check-input:checked { background-color: var(--primary-green); border-color: var(--primary-green); }
+        .pr-tracker-box { background: #f0f4f1; border-radius: 10px; padding: 15px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar p-3 shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="fw-bold fs-4">My AI Trainer</span>
+        <span class="badge bg-secondary" id="date-display"></span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card p-3 mb-4 bg-white border-start border-4 border-success">
+        <h6 class="fw-bold mb-2 text-success">Belly Fat & Cardio Tracker</h6>
+        <div class="row g-2">
+            <div class="col-6">
+                <label class="x-small text-muted">Daily Steps</label>
+                <input type="number" id="daily-steps" class="form-control form-control-sm" placeholder="e.g. 10000">
+            </div>
+            <div class="col-6">
+                <label class="x-small text-muted">Cardio (min)</label>
+                <input type="text" id="cardio-type" class="form-control form-control-sm" placeholder="HIIT / Walk">
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-pills mb-4 justify-content-center overflow-auto flex-nowrap py-1" id="workoutTabs" role="tablist" style="white-space: nowrap;">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#day1">Day 1</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#day2">Day 2</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#day3">Day 3</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#day4">Day 4</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#day5">Day 5</button></li>
+    </ul>
+
+    <div class="tab-content" id="workoutContent">
+        
+        <div class="tab-pane fade show active" id="day1">
+            <div class="card p-4">
+                <h5 class="fw-bold text-dark">Day 1: Push (Chest, Shoulders, Triceps)</h5>
+                <div id="list-day1">
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Barbell Bench Press</strong><br><small class="text-muted">4x 8–10 | Focus on control/lockout</small></div>
+                        <input type="checkbox" class="form-check-input" value="Barbell Bench Press">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Incline Dumbbell Press</strong><br><small class="text-muted">3x 10–12 | Squeeze at top</small></div>
+                        <input type="checkbox" class="form-check-input" value="Incline DB Press">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Seated Shoulder Press</strong><br><small class="text-muted">3x 10 | Keep back straight</small></div>
+                        <input type="checkbox" class="form-check-input" value="Seated Shoulder Press">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Lateral Raises</strong><br><small class="text-muted">3x 12–15 | Slow and controlled</small></div>
+                        <input type="checkbox" class="form-check-input" value="Lateral Raises">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Cable Rope Pushdowns</strong><br><small class="text-muted">3x 10–12 | Don’t flare elbows</small></div>
+                        <input type="checkbox" class="form-check-input" value="Cable Pushdowns">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Overhead DB Extension</strong><br><small class="text-muted">3x 12 | Stretch triceps fully</small></div>
+                        <input type="checkbox" class="form-check-input" value="Overhead DB Extension">
+                    </div>
+                </div>
+                <div class="pr-tracker-box">
+                    <label class="small fw-bold">Push PR Tracker</label>
+                    <input type="text" class="form-control" id="pr-day1" placeholder="Bench/Press PR lbs">
+                </div>
+                <button class="btn btn-save w-100 mt-4" onclick="logWorkout('Push Day', 'day1')">Finish Session</button>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="day2">
+            <div class="card p-4">
+                <h5 class="fw-bold text-dark">Day 2: Pull (Back, Rear Delt, Biceps)</h5>
+                <div id="list-day2">
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Pull-Ups / Lat Pulldown</strong><br><small class="text-muted">4x 8–10 | Full range</small></div>
+                        <input type="checkbox" class="form-check-input" value="Pull-Ups/Lat Pulldown">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Machine Rows</strong><br><small class="text-muted">3x 8–10 | Neutral spine</small></div>
+                        <input type="checkbox" class="form-check-input" value="Machine Rows">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Seated Cable Rows</strong><br><small class="text-muted">3x 10–12 | Hold contraction</small></div>
+                        <input type="checkbox" class="form-check-input" value="Seated Cable Rows">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Face Pull</strong><br><small class="text-muted">3x 12–15 | Slow movement</small></div>
+                        <input type="checkbox" class="form-check-input" value="Face Pull">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Barbell Curls</strong><br><small class="text-muted">3x 10 | Full stretch bottom</small></div>
+                        <input type="checkbox" class="form-check-input" value="Barbell Curls">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Incline DB Curls</strong><br><small class="text-muted">3x 12 | Avoid swinging</small></div>
+                        <input type="checkbox" class="form-check-input" value="Incline DB Curls">
+                    </div>
+                </div>
+                <div class="pr-tracker-box">
+                    <label class="small fw-bold">Pull PR Tracker</label>
+                    <input type="text" class="form-control" id="pr-day2" placeholder="Deadlift/Row PR lbs">
+                </div>
+                <button class="btn btn-save w-100 mt-4" onclick="logWorkout('Pull Day', 'day2')">Finish Session</button>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="day3">
+            <div class="card p-4">
+                <h5 class="fw-bold text-dark">Day 3: Legs (Quads, Hams, Calves)</h5>
+                <div id="list-day3">
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Barbell Squats</strong><br><small class="text-muted">4x 8–10 | Depth below parallel</small></div>
+                        <input type="checkbox" class="form-check-input" value="Barbell Squats">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Leg Press</strong><br><small class="text-muted">3x 8–10 | Controlled descent</small></div>
+                        <input type="checkbox" class="form-check-input" value="Leg Press">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Leg Extension</strong><br><small class="text-muted">3x 12–15 | Pause at top</small></div>
+                        <input type="checkbox" class="form-check-input" value="Leg Extension">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Leg Curl</strong><br><small class="text-muted">3x 12–15 | Full stretch</small></div>
+                        <input type="checkbox" class="form-check-input" value="Leg Curl">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Standing Calf Raise</strong><br><small class="text-muted">4x 15 | Hold top 1s</small></div>
+                        <input type="checkbox" class="form-check-input" value="Standing Calf Raise">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Lunges</strong><br><small class="text-muted">3x 10 | Slow tempo</small></div>
+                        <input type="checkbox" class="form-check-input" value="Lunges">
+                    </div>
+                </div>
+                <div class="pr-tracker-box">
+                    <label class="small fw-bold">Leg PR Tracker</label>
+                    <input type="text" class="form-control" id="pr-day3" placeholder="Squat/Leg Press PR lbs">
+                </div>
+                <button class="btn btn-save w-100 mt-4" onclick="logWorkout('Leg Day', 'day3')">Finish Session</button>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="day4">
+            <div class="card p-4">
+                <h5 class="fw-bold text-dark">Day 4: Full Upper (Chest, Back, Shoulders)</h5>
+                <div id="list-day4">
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Bench Press</strong><br><small class="text-muted">4x 8–10 | Progressive overload</small></div>
+                        <input type="checkbox" class="form-check-input" value="Bench Press (Full Upper)">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Chest Fly</strong><br><small class="text-muted">3x 12 | Focus on stretch</small></div>
+                        <input type="checkbox" class="form-check-input" value="Chest Fly">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Lat Pulldown (Wide Grip)</strong><br><small class="text-muted">3x 10–12 | Pull to chest</small></div>
+                        <input type="checkbox" class="form-check-input" value="Lat Pulldown (Wide)">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Rows</strong><br><small class="text-muted">3x 10 | Neutral grip</small></div>
+                        <input type="checkbox" class="form-check-input" value="Rows">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Arnold Press</strong><br><small class="text-muted">3x 10 | Controlled rotation</small></div>
+                        <input type="checkbox" class="form-check-input" value="Arnold Press">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Lateral Raise (Drop Set)</strong><br><small class="text-muted">3x 12–15 | Burnout last set</small></div>
+                        <input type="checkbox" class="form-check-input" value="Lateral Raise (Drop)">
+                    </div>
+                </div>
+                <button class="btn btn-save w-100 mt-4" onclick="logWorkout('Full Upper', 'day4')">Finish Session</button>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="day5">
+            <div class="card p-4">
+                <h5 class="fw-bold text-dark">Day 5: Abs + Arms</h5>
+                <div id="list-day5">
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Leg Raises</strong><br><small class="text-muted">4x 6–8 | Heavy compound</small></div>
+                        <input type="checkbox" class="form-check-input" value="Leg Raises">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Abs (Circuit/Choice)</strong><br><small class="text-muted">3x 10 | Keep chest up</small></div>
+                        <input type="checkbox" class="form-check-input" value="Abs">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Preacher Curls</strong><br><small class="text-muted">3x 12–15 | Controlled reps</small></div>
+                        <input type="checkbox" class="form-check-input" value="Preacher Curls">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Hammer Curl</strong><br><small class="text-muted">3x 10–12 | Neutral grip</small></div>
+                        <input type="checkbox" class="form-check-input" value="Hammer Curl">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Skull Crushers / Pushdowns</strong><br><small class="text-muted">3x 10 | Slow eccentric</small></div>
+                        <input type="checkbox" class="form-check-input" value="Skull Crushers">
+                    </div>
+                    <div class="exercise-row d-flex justify-content-between align-items-center">
+                        <div><strong>Dips or Bench Dips</strong><br><small class="text-muted">3x 12 | Keep elbows close</small></div>
+                        <input type="checkbox" class="form-check-input" value="Dips">
+                    </div>
+                </div>
+                <button class="btn btn-save w-100 mt-4" onclick="logWorkout('Abs & Arms Day', 'day5')">Finish Session</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYiSl0hqLeWT6c1C143Hrja9MGYyj2HEjdT48tGJ4RIpqoq2VJsnCWuF79z3G5iKB3tg/exec';
+
+    document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+    async function logWorkout(name, id) {
+        const container = document.getElementById(id);
+        const checked = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value);
+        const pr = container.querySelector('input[type="text"]')?.value || "N/A";
+        const steps = document.getElementById('daily-steps').value || "0";
+        const cardio = document.getElementById('cardio-type').value || "None";
+
+        if (checked.length === 0) return alert("Please check at least one exercise you completed!");
+
+        const btn = container.querySelector('.btn-save');
+        btn.disabled = true;
+        btn.innerText = "Syncing with Sheets...";
+
+        const payload = {
+            workoutName: name,
+            exercises: checked.join(", "),
+            notes: `Steps: ${steps} | Cardio: ${cardio} | PR: ${pr}`
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Essential for Google Apps Script redirects
+                body: JSON.stringify(payload)
+            });
+            
+            alert("Success! Your progress is logged in Google Sheets.");
+            
+            // UI Reset
+            container.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
+            if(container.querySelector('input[type="text"]')) container.querySelector('input[type="text"]').value = "";
+            document.getElementById('daily-steps').value = "";
+            document.getElementById('cardio-type').value = "";
+            
+        } catch (e) {
+            console.error(e);
+            alert("Error logging data. Check your Google Script deployment.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Finish Session";
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
